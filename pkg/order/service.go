@@ -1,4 +1,4 @@
-package message
+package order
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	CreateUser(context.Context, *Message) (*Message, error)
+	CreateUser(context.Context, *Order) (*Order, error)
 }
 
 type service struct {
@@ -20,11 +20,11 @@ func NewService(client *mongo.Client, dbName string) Service {
 	}
 }
 
-func (s *service) CreateUser(ctx context.Context, message *Message) (*Message, error) {
-	insertedMessage, err := s.repository.Insert(ctx, message)
+func (s *service) CreateUser(ctx context.Context, order *Order) (*Order, error) {
+	insertedOrder, err := s.repository.Insert(ctx, order)
 	if err != nil {
 		return nil, err
 	}
 
-	return insertedMessage, nil
+	return insertedOrder, nil
 }

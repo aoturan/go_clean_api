@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"github.com/aoturan/go_clean_api/api"
+	"github.com/aoturan/go_clean_api/pkg/order"
 	"github.com/aoturan/go_clean_api/pkg/session"
 	"github.com/aoturan/go_clean_api/pkg/user"
 	"github.com/aoturan/go_clean_api/pkg/util"
@@ -46,19 +47,22 @@ func main() {
 		config = fiber.Config{
 			ErrorHandler: api.ErrorHandler,
 		}
+
 		userService    = user.NewService(client, envConfig.DbName)
 		sessionService = session.NewService(client, envConfig.DbName)
+		orderService   = order.NewService(client, envConfig.DbName)
 
 		userHandler    = api.NewUserHandler(userService)
 		sessionHandler = api.NewSessionHandler(sessionService)
+		orderHandler   = api.NewOrderHandler(orderService)
 
-		app = fiber.New(config)
-		//auth        = app.Group("/api")
+		app   = fiber.New(config)
 		apiv1 = app.Group("/api/v1", api.Jwt())
 	)
 
 	api.UserRouter(apiv1, userHandler)
 	api.SessionRouter(apiv1, sessionHandler)
+	api.OrderRouter(apiv1, orderHandler)
 
 	go func() {
 		if err := app.Listen(*listenAddr); err != nil {

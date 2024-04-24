@@ -17,6 +17,6 @@ func NewSessionHandler(sessionService session.Service) *SessionHandler {
 }
 
 func (h *SessionHandler) HandleGetSession(c *fiber.Ctx) error {
-	log.Info().Msg("user started")
+	log.Info().Msg("session started")
 	return c.JSON("hello world")
 }

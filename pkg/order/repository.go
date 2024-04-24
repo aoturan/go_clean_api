@@ -1,4 +1,4 @@
-package message
+package order
 
 import (
 	"context"
@@ -6,10 +6,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-const coll = "messages"
+const coll = "orders"
 
 type Repository interface {
-	Insert(context.Context, *Message) (*Message, error)
+	Insert(context.Context, *Order) (*Order, error)
 }
 
 type repository struct {
@@ -22,12 +22,12 @@ func NewRepository(client *mongo.Client, dbName string) Repository {
 	}
 }
 
-func (r *repository) Insert(ctx context.Context, message *Message) (*Message, error) {
-	result, err := r.collection.InsertOne(ctx, message)
+func (r *repository) Insert(ctx context.Context, order *Order) (*Order, error) {
+	result, err := r.collection.InsertOne(ctx, order)
 	if err != nil {
 		return nil, err
 	}
 
-	message.ID = result.InsertedID.(primitive.ObjectID)
-	return message, nil
+	order.ID = result.InsertedID.(primitive.ObjectID)
+	return order, nil
 }
